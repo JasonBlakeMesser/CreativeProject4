@@ -1,11 +1,52 @@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <canvas id="gc" width="400" height="400"></canvas>
+<p>
+<form> Enter username:
+	<input type="text" id="username" value="">
+	<button id="userBtn" type="button">Submit</button>
+</form><br>
+<form>
+	<button id="display" type="button">Display High Scores</button><br>
+	<ul id="highScores"></ul>
+</form>
+
+
+
 <script>
+var high_scores = {
+	0: "nobody",
+	6: "Jason",
+	7: "Hunter",
+	5: "Davis"
+	};
+var scores = [0, 5, 6, 7];
+$("#userBtn").click(function(e) {
+	var value = $("#username").val();
+	console.log(value);
+	e.preventDefault();
+})
+
+$("#display").click(function(e) {
+	var everything = "";
+//	e.preventDefault();
+	scores.sort((a, b) => a - b);
+	console.log(scores);
+	var value1 = scores[scores.length - 1];
+	var value2 = scores[scores.length - 2];
+	var value3 = scores[scores.length - 3];
+	everything += "<li>" + "#1: " + scores[scores.length - 1] + ", username: " + high_scores[value1] + "</li>"
+	everything += "<li>" + "#2: " + scores[scores.length - 2] + ", username: " + high_scores[value2] + "</li>"
+	everything += "<li>" + "#3: " + scores[scores.length - 3] + ", username: " + high_scores[value3] + "</li>"
+	$("#highScores").html(everything);
+	
+})
 window.onload=function() {
 	canv=document.getElementById("gc");
 	ctx=canv.getContext("2d");
 	document.addEventListener("keydown",keyPush);
 	setInterval(game,1000/20);
 }
+
 px=py=10;
 gs=tc=20;
 ax=ay=15;
@@ -34,6 +75,10 @@ function game() {
 	for(var i=0;i<trail.length;i++) {
 		ctx.fillRect(trail[i].x*gs,trail[i].y*gs,gs-2,gs-2);
 		if(trail[i].x==px && trail[i].y==py) {
+			high_scores[tail] = $("#username").val();
+			scores.push(tail);
+			console.log(high_scores);
+			console.log(scores);
 			tail = 5;
 		}
 	}
@@ -50,6 +95,8 @@ function game() {
 	ctx.fillStyle="red";
 	ctx.fillRect(ax*gs,ay*gs,gs-2,gs-2);
 }
+
+
 function keyPush(evt) {
 	switch(evt.keyCode) {
 		case 37:
